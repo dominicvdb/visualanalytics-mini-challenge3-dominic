@@ -13,9 +13,14 @@ def _():
 
 
 @app.cell
-def _(mo, pd):
-    _base = mo.notebook_location() / "public"
-    df_intents = pd.read_csv(str(_base / "categories_v2.csv"))
+def _(pd):
+    # Load from GitHub raw URL — works locally, in molab, and in WASM exports
+    _url = "https://raw.githubusercontent.com/dominicvdb/visualanalytics-mini-challenge3/main/public/categories_v2.csv"
+    try:
+        df_intents = pd.read_csv(_url)
+    except Exception:
+        # Fallback to local file
+        df_intents = pd.read_csv("public/categories_v2.csv")
     print(f"Loaded {len(df_intents)} classified messages")
     return (df_intents,)
 
